@@ -1,0 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-frontend
+spec:
+  selector:
+    app: demo-frontend
+  ports:
+  - protocol: TCP
+    port: 8081
+    nodePort: 30001
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-frontend
+spec:
+  selector:
+      matchLabels:
+        app: demo-frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: demo-frontend
+    spec:
+      containers:
+      - name: demo-frontend-prod
+        image: memoriad/demo-frontend:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+        volumeMounts:
+        - name: application-config
+          mountPath: "/config"
+          readOnly: true
+      volumes:
+      - name: application-config
+        configMap:
+          name: demo-frontend-config
+          items:
+          - key: application.properties
+            path: application.properties
+

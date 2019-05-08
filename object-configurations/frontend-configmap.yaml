@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-frontend-config
+  namespace: default
+data:
+  application.properties: |
+    server.port=8081
+    greeter.message=Hello123
